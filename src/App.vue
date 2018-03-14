@@ -1,31 +1,20 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
-    <PostScoreItem
-      :playerScore="playerScore"
-      :allTeams="allTeams"
-      :teamPlayers="teamPlayers"
-    />
+  <div>
+    <div id="app">
+      <img src="./assets/logo.png">
+      <router-view/>
+    </div>
+    <PostScore />
   </div>
 </template>
 
 <script>
-import PostScoreItem from './components/PostScoreItem'
+import PostScore from './components/PostScore'
+
 export default {
   name: 'App',
-  components: { PostScoreItem },
-  data: function () {
-    return {
-      allTeams: [],
-      teamPlayers: [],
-      playerScore: {
-        teamId: 0,
-        playerId: 0,
-        score: 0,
-        break: 0
-      }
-    }
+  components: {
+    PostScore
   }
 }
 </script>

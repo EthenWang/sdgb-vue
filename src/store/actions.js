@@ -1,0 +1,2 @@
+export const INIT_MATCH_STATE = 'INIT_MATCH_STATE'
+export const GET_TEAM_PLAYERS = 'GET_TEAM_PLAYERS'

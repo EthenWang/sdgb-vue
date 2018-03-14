@@ -1,52 +1,92 @@
 <template>
-  <Form label-position="right">
-    <Row type="flex" justify="center">
-    <Col span="5">
-      <FormItem label="">
-        <Select v-model="playerScore.teamId">
-          <template v-if="allTeams" v-for="team in allTeams">
-            <Option :value="team.id" :key="team.id">{{team.name}}</Option>
-          </template>
-        </Select>
-      </FormItem>
-    </Col>
-    <Col span="6">
-      <FormItem label="">
-        <Select v-model="playerScore.playerId">
-          <template v-if="teamPlayers" v-for="player in teamPlayers">
-            <Option :value="player.id" :key="player.id">{{player.name}}</Option>
-          </template>
-        </Select>
-      </FormItem>
-    </Col>
-    <Col span="3">
-      <FormItem label="">
-        <Input :number="true" v-model="playerScore.score"/>
-      </FormItem>
-    </Col>
-    <Col span="3">
-      <FormItem label="">
-        <Input :number="true" v-model="playerScore.break"/>
-      </FormItem>
-    </Col>
+  <Form label-position="top">
+    <Row type="flex" justify="center" :gutter="20">
+      <Col span="5">
+        <FormItem label="队名">
+          <Select v-model="playerScore.teamId" @change="onTeamChange">
+            <Option
+              v-for="team in teams"
+              v-if="team"
+              :value="team.id"
+              :key="team.id"
+            >
+              {{team.name}}
+            </Option>
+          </Select>
+        </FormItem>
+      </Col>
+      <Col span="6">
+        <FormItem label="网络ID">
+          <Select v-model="playerScore.playerId">
+            <Option
+              v-for="player in teamPlayers"
+              v-if="player"
+              :value="player.id"
+              :key="player.id"
+            >
+              <NickName ...player />
+            </Option>
+          </Select>
+        </FormItem>
+      </Col>
+      <Col span="3">
+        <FormItem label="比分">
+          <InputNumber v-model="playerScore.score"></InputNumber>
+        </FormItem>
+      </Col>
+      <Col span="3">
+        <FormItem label="断线">
+          <InputNumber
+            v-model="playerScore.break"
+            :max="5"
+            :min="0"
+            :editable="false"
+          ></InputNumber>
+        </FormItem>
+      </Col>
     </Row>
   </Form>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import * as actions from '../store/actions'
+import * as _ from 'lodash'
+import NickName from './NickName'
+
 export default {
   name: 'PostScoreItem',
   props: {
-    playerScore: {
-      type: Object,
+    index: {
+      type: Number,
       required: true
+    }
+  },
+  components: {
+    NickName
+  },
+  computed: {
+    ...mapState([
+      'teams', 'gameScore', 'players'
+    ]),
+    playerScore: function () {
+      return this.gameScore[this.index]
     },
-    allTeams: {
-      type: Array,
-      required: true
-    },
-    teamPlayers: {
-      type: Array
+    teamPlayers: function () {
+      return _.filter(this.players, { 'teamId': this.playerScore.teamId }) || []
+    }
+  },
+  mounted: function () {
+    this.$emit('scoreItemMounted', {
+      colspan: 17
+    })
+  },
+  methods: {
+    onTeamChange: function (teamId) {
+      this.$store.dispatch({
+        type: actions.GET_TEAM_PLAYERS,
+        teamId
+      })
     }
   }
 }
