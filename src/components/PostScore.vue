@@ -4,6 +4,7 @@
       v-for="index in [0, 1, 2, 3]"
       :key="index"
       :index="index"
+      :playerScore="gameScore[index]"
       @scoreItemMounted="onScoreItemMounted"
     />
     <Row type="flex" justify="center" :gutter="20">
@@ -20,14 +21,18 @@
 </template>
 
 <script>
-import { Button } from 'iview'
-import { mapState } from 'vuex'
 import * as _ from 'lodash'
 import PostScoreItem from './PostScoreItem'
+import { buildGameScore } from '../utils'
 
 export default {
   components: {
-    PostScoreItem, Button
+    PostScoreItem
+  },
+  props: {
+    gameId: {
+      type: Number
+    }
   },
   data: function () {
     return {
@@ -35,9 +40,9 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'gameScore'
-    ]),
+    gameScore: function () {
+      return buildGameScore(this.$store, this.gameId)
+    },
     validScore: function () {
       if (this.totalScore !== 0) {
         return false

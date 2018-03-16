@@ -21,12 +21,6 @@ export default new Vuex.Store({
     ],
     players: [],
     games: [],
-    gameScore: [{}, {}, {}, {}].map(a => ({
-      teamId: 0,
-      playerId: 0,
-      score: 0,
-      'break': 0
-    })),
     Rule: {}
   },
 

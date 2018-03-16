@@ -60,6 +60,10 @@ export default {
     index: {
       type: Number,
       required: true
+    },
+    playerScore: {
+      type: Object,
+      required: true
     }
   },
   components: {
@@ -67,11 +71,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'teams', 'gameScore', 'players'
+      'teams', 'players'
     ]),
-    playerScore: function () {
-      return this.gameScore[this.index]
-    },
     teamPlayers: function () {
       return _.filter(this.players, { 'teamId': this.playerScore.teamId }) || []
     }
