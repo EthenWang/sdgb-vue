@@ -22,10 +22,9 @@
               v-for="player in teamPlayers"
               v-if="player"
               :value="player.id"
+              :label="nickName(player)"
               :key="player.id"
-            >
-              <NickName ...player />
-            </Option>
+            />
           </Select>
         </FormItem>
       </Col>
@@ -52,7 +51,7 @@
 import { mapState } from 'vuex'
 import * as actions from '../store/actions'
 import * as _ from 'lodash'
-import NickName from './NickName'
+import { nickName } from '../utils'
 
 export default {
   name: 'PostScoreItem',
@@ -65,9 +64,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  components: {
-    NickName
   },
   computed: {
     ...mapState([
@@ -83,6 +79,7 @@ export default {
     })
   },
   methods: {
+    nickName,
     onTeamChange: function (teamId) {
       this.$store.dispatch({
         type: actions.GET_TEAM_PLAYERS,

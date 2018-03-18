@@ -3,10 +3,13 @@ import Vuex from 'vuex'
 import * as _ from 'lodash'
 import * as actions from './actions'
 import { ajaxCall } from '../utils/ajax'
+import { copyArray } from '../utils'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  strict: true,
+
   state: {
     matchId: 0, // 0 means the match under way
     teams: [
@@ -19,7 +22,18 @@ export default new Vuex.Store({
         name: 't2'
       }
     ],
-    players: [],
+    players: [
+      {
+        teamId: 1,
+        name: 't1_p1',
+        webId: 't1_p1'
+      },
+      {
+        teamId: 1,
+        name: 't1_p2',
+        webId: 't1_p2'
+      }
+    ],
     games: [],
     Rule: {}
   },
@@ -49,6 +63,26 @@ export default new Vuex.Store({
           data: response
         })
       })
+    }
+  },
+
+  getters: {
+    teamScore: function () {
+
+    },
+    playerScore: function () {
+
+    },
+    playerList: function (state) {
+      let players = copyArray(state.players)
+      players = players.sort(player => player.teamId).map(player => {
+        let team = _.find(state.teams, { id: player.teamId })
+        return {
+          ...player,
+          teamName: team ? team.name : ''
+        }
+      })
+      return players
     }
   }
 })

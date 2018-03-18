@@ -5,16 +5,20 @@
       <router-view/>
     </div>
     <PostScore />
+    <Match />
+    <PlayerList />
   </div>
 </template>
 
 <script>
 import PostScore from './components/PostScore'
+import Match from './components/Match'
+import PlayerList from './components/PlayerList'
 
 export default {
   name: 'App',
   components: {
-    PostScore
+    PostScore, Match, PlayerList
   }
 }
 </script>
