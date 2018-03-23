@@ -1,70 +1,77 @@
 <template>
   <div class="player-list">
-    <Table border stripe :columns="playerCols" :data="playerList"></Table>
+    <Table border stripe :columns="playerCols" :data="players"></Table>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Icon from 'iview'
-// import { copyArray } from '../utils'
+import { mapState, mapGetters } from 'vuex'
+import Vue from 'vue'
+import { Row, Col } from 'iview'
+
+const TeamPlayer = Vue.extend({
+  props: {
+    players: {
+      type: Array,
+      required: true
+    }
+  },
+  components: {
+    Row, Col
+  },
+  render: function (h) { // Why "h" must be here?
+    return (
+      <div>
+        {this.players.map((p, i) =>
+          <Row>
+            <Col span="8">
+              <span class="expand-key">队员{i + 1}: </span>
+              <span class="expand-value">{p.name}</span>
+            </Col>
+            <Col span="8">
+              <span class="expand-key">网络Id:</span>
+              <span class="expand-value">{p.webId}</span>
+            </Col>
+            <Col span="8">
+              <span class="expand-key">已完成局数:</span>
+              <span class="expand-value">{p.numGames || 0}</span>
+            </Col>
+          </Row>
+        )}
+      </div>
+    )
+  }
+})
 
 export default {
   name: 'PlayerList',
   components: {
-    Icon
+    TeamPlayer
   },
   data: function () {
     return {
       playerCols: [
         {
-          title: '队名',
-          key: 'teamName'
-        },
-        {
-          title: '队员',
-          key: 'players',
-          render: function (h, params) {
-            return h(
-              'div',
-              [
-                params.row.name,
-                h('span', [
-                  h('Icon', {
-                    props: {
-                      type: 'edit'
-                    }
-                  }),
-                  h('Icon', {
-                    props: {
-                      type: 'minus-circled'
-                    }
-                  })
-                ])
-              ]
-            )
+          type: 'expand',
+          width: 50,
+          render: (h, params) => {
+            return h(TeamPlayer, {
+              props: {
+                players: params.row.player
+              }
+            })
           }
         },
         {
-          title: '网络Id',
-          key: 'webId'
+          title: '队名',
+          key: 'teamName'
         }
       ]
     }
   },
   computed: {
-    ...mapGetters(['playerScore', 'playerList']) /* ,
-    players: function () {
-      let playerList = this.playerList
-      let teamName = playerList[0].teamName
-      playerList.forEach(player => {
-        if (player.teamName === teamName) {
-          teamName = player.teamName
-          player.rowspan = 2
-        }
-      })
-      return playerList
-    } */
+    ...mapState(['players']),
+    ...mapGetters(['playerScore'])
   }
 }
 </script>

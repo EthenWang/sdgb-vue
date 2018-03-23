@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import * as _ from 'lodash'
 import * as actions from './actions'
 import { ajaxCall } from '../utils/ajax'
-import { copyArray } from '../utils'
 
 Vue.use(Vuex)
 
@@ -12,26 +11,32 @@ export default new Vuex.Store({
 
   state: {
     matchId: 0, // 0 means the match under way
-    teams: [
-      {
-        id: 1,
-        name: 't1'
-      },
-      {
-        id: 2,
-        name: 't2'
-      }
-    ],
     players: [
       {
-        teamId: 1,
-        name: 't1_p1',
-        webId: 't1_p1'
+        teamName: 't1',
+        player: [
+          {
+            name: 't1_p1',
+            webId: 't1_p1'
+          },
+          {
+            name: 't1_p2',
+            webId: 't1_p2'
+          }
+        ]
       },
       {
-        teamId: 1,
-        name: 't1_p2',
-        webId: 't1_p2'
+        teamName: 't2',
+        player: [
+          {
+            name: 't2_p1',
+            webId: 't2_p1'
+          },
+          {
+            name: 't2_p2',
+            webId: 't2_p2'
+          }
+        ]
       }
     ],
     games: [],
@@ -72,17 +77,6 @@ export default new Vuex.Store({
     },
     playerScore: function () {
 
-    },
-    playerList: function (state) {
-      let players = copyArray(state.players)
-      players = players.sort(player => player.teamId).map(player => {
-        let team = _.find(state.teams, { id: player.teamId })
-        return {
-          ...player,
-          teamName: team ? team.name : ''
-        }
-      })
-      return players
     }
   }
 })
