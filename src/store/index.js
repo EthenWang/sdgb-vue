@@ -176,7 +176,8 @@ export default new Vuex.Store({
               playerNum: playerScore[0].playerNum,
               avgPoint,
               stdAvgPoint,
-              validAvgPoint: stdAvgPoint > 0 ? Math.max(avgPoint, stdAvgPoint) : 0
+              validAvgPoint: stdAvgPoint > 0 ? Math.max(avgPoint, stdAvgPoint) : 0,
+              playerScore
             })
           }
         )

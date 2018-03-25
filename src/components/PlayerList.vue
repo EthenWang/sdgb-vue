@@ -1,13 +1,3 @@
-<style>
-.expand-row {
-  padding-bottom: 10px;
-}
-
-.expand-key {
-  padding: 0 10px 0 0;
-}
-</style>
-
 <template>
   <div class="player-list">
     <Table border stripe :columns="playerCols" :data="playerList"></Table>

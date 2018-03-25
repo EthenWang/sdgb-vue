@@ -12,12 +12,71 @@
 <script>
 import * as actions from '../store/actions'
 import { mapActions, mapGetters } from 'vuex'
+import Vue from 'vue'
+import { Row, Col } from 'iview'
+
+const TeamPlayer = Vue.extend({
+  props: {
+    playerScore: {
+      type: Array,
+      required: true
+    }
+  },
+  components: {
+    Row, Col
+  },
+  render: function (h) { // Why "h" must be here?
+    return (
+      <div>
+        {this.playerScore.map((p, i) =>
+          <Row class="expand-row">
+            <Col span="4">
+              <span class="expand-key">队员{i + 1}: </span>
+              <span class="expand-value">{p.nickName}</span>
+            </Col>
+            <Col span="4">
+              <span class="expand-key">排名:</span>
+              <span class="expand-value">{p.ranking}</span>
+            </Col>
+            <Col span="4">
+              <span class="expand-key">总局数:</span>
+              <span class="expand-value">{p.totalGames}</span>
+            </Col>
+            <Col span="4">
+              <span class="expand-key">均分: </span>
+              <span class="expand-value">{p.avgPoint}</span>
+            </Col>
+            <Col span="4">
+              <span class="expand-key">有效均分:</span>
+              <span class="expand-value">{p.validAvgPoint}</span>
+            </Col>
+            <Col span="4">
+              <span class="expand-key">总分:</span>
+              <span class="expand-value">{p.totalScore}</span>
+            </Col>
+          </Row>
+        )}
+      </div>
+    )
+  }
+})
 
 export default {
   name: 'Match',
   data: function () {
     return {
       teamScoreCols: [
+        {
+          type: 'expand',
+          width: 50,
+          render: (h, params) => {
+            return h(TeamPlayer, {
+              props: {
+                playerScore: params.row.playerScore
+              }
+            })
+          }
+        },
         {
           title: '排名',
           key: 'ranking'
