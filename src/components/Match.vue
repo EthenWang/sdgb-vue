@@ -24,15 +24,11 @@ export default {
         },
         {
           title: '队名',
-          key: 'name'
+          key: 'teamName'
         },
         {
           title: '总局数',
           key: 'totalGames'
-        },
-        {
-          title: '总局分',
-          key: 'totalPoints'
         },
         {
           title: '总均分',
@@ -52,7 +48,7 @@ export default {
         },
         {
           title: '队员数',
-          key: 'playerNumber'
+          key: 'playerNum'
         }
       ],
       playerScoreCols: [
@@ -69,8 +65,8 @@ export default {
           key: 'totalGames'
         },
         {
-          title: '总局分',
-          key: 'totalPoints'
+          title: '均分',
+          key: 'avgPoint'
         },
         {
           title: '有效均分',
@@ -83,13 +79,18 @@ export default {
       ]
     }
   },
+  created: function () {
+    this.init()
+  },
   computed: {
-    ...mapActions({
-      created: actions.INIT_MATCH_STATE
-    }),
     ...mapGetters([
       'teamScore', 'playerScore'
     ])
+  },
+  methods: {
+    ...mapActions({
+      init: actions.INIT_MATCH_STATE
+    })
   }
 }
 </script>

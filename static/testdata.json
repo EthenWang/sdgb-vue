@@ -1,0 +1,33 @@
+{
+  "matchId": 0,
+  "players": [
+    {
+      "teamName": "t1",
+      "player": [
+        {
+          "name": "t1_p1",
+          "webId": "t1_p1"
+        },
+        {
+          "name": "t1_p2",
+          "webId": "t1_p2"
+        }
+      ]
+    },
+    {
+      "teamName": "t2",
+      "player": [
+        {
+          "name": "t2_p1",
+          "webId": "t2_p1"
+        },
+        {
+          "name": "t2_p2",
+          "webId": "t2_p2"
+        }
+      ]
+    }
+  ],
+  "games": [],
+  "Rule": {}
+}

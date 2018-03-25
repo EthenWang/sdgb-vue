@@ -3,7 +3,7 @@
     <Row type="flex" justify="center" :gutter="20">
       <Col span="5">
         <FormItem label="队名">
-          <Select v-model="playerScore.teamId" @change="onTeamChange">
+          <Select v-model="playerScore.teamId" @on-change="onTeamChange">
             <Option
               v-for="team in teams"
               v-if="team"
@@ -22,9 +22,10 @@
               v-for="player in teamPlayers"
               v-if="player"
               :value="player.id"
-              :label="nickName(player)"
+              :label="player.name"
               :key="player.id"
-            />
+            >
+            </Option>
           </Select>
         </FormItem>
       </Col>
@@ -49,7 +50,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import * as actions from '../store/actions'
 import * as _ from 'lodash'
 import { nickName } from '../utils'
 
@@ -65,12 +65,15 @@ export default {
       required: true
     }
   },
+  data: function () {
+    return {
+      teamPlayers: []
+    }
+  },
   computed: {
-    ...mapState([
-      'teams', 'players'
-    ]),
-    teamPlayers: function () {
-      return _.filter(this.players, { 'teamId': this.playerScore.teamId }) || []
+    ...mapState(['players']),
+    teams: function () {
+      return this.players.map(p => p.team)
     }
   },
   mounted: function () {
@@ -81,10 +84,11 @@ export default {
   methods: {
     nickName,
     onTeamChange: function (teamId) {
-      this.$store.dispatch({
-        type: actions.GET_TEAM_PLAYERS,
-        teamId
-      })
+      const index = _.findIndex(this.players, p => p.team.id === this.playerScore.teamId)
+      if (index !== -1) {
+        this.teamPlayers = this.players[index].players
+      }
+      return []
     }
   }
 }
