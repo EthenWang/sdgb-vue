@@ -96,7 +96,7 @@ export default new Vuex.Store({
               totalPoint: tmpPoints[i],
               totalGames: 1,
               totalScore: s.score,
-              playerNum: team.players.length,
+              teamPlayerNum: team.players.length,
               teamValidGameNum: minTeamGames / team.players.length,
               teamValidTotalPoint: 0,
               avgPoint: tmpPoints[i]
@@ -147,7 +147,7 @@ export default new Vuex.Store({
               totalGames,
               totalPoint,
               totalScore,
-              playerNum: playerScore[0].playerNum,
+              playerNum: playerScore[0].teamPlayerNum,
               avgPoint,
               stdAvgPoint,
               validAvgPoint: stdAvgPoint > 0 ? Math.max(avgPoint, stdAvgPoint) : 0,
@@ -156,10 +156,11 @@ export default new Vuex.Store({
           }
         )
       }
-      return _.orderBy(score, 'validAvgPoint', 'desc').map((s, i) => ({
-        ...s,
-        ranking: i + 1
-      }))
+      return _.orderBy(score, 'validAvgPoint', 'desc')
+        .map((s, i) => ({
+          ...s,
+          ranking: i + 1
+        }))
     }
   },
 

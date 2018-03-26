@@ -65,7 +65,49 @@ export default {
   name: 'Match',
   data: function () {
     return {
-      teamScoreCols: [
+      playerScoreCols: [
+        {
+          title: '排名',
+          key: 'ranking',
+          sortable: true
+        },
+        {
+          title: '昵称',
+          key: 'nickName'
+        },
+        {
+          title: '总局数',
+          key: 'totalGames',
+          sortable: true
+        },
+        {
+          title: '均分',
+          key: 'avgPoint',
+          sortable: true
+        },
+        {
+          title: '有效均分',
+          key: 'validAvgPoint',
+          sortable: true
+        },
+        {
+          title: '总分',
+          key: 'totalScore',
+          sortable: true
+        }
+      ]
+    }
+  },
+  mounted: function () {
+    this.init()
+  },
+  computed: {
+    ...mapGetters([
+      'teamScore', 'playerScore'
+    ]),
+    teamScoreCols: function () {
+      const { minTeamGames } = this.$store.state.rule
+      return [
         {
           type: 'expand',
           width: 50,
@@ -79,7 +121,8 @@ export default {
         },
         {
           title: '排名',
-          key: 'ranking'
+          key: 'ranking',
+          sortable: true
         },
         {
           title: '队名',
@@ -87,64 +130,35 @@ export default {
         },
         {
           title: '总局数',
-          key: 'totalGames'
+          key: 'totalGames',
+          sortable: true
         },
         {
           title: '总均分',
-          key: 'avgPoint'
+          key: 'avgPoint',
+          sortable: true
         },
         {
           title: '有效均分',
-          key: 'validAvgPoint'
+          key: 'validAvgPoint',
+          sortable: true
         },
         {
-          title: '前XXX局均分',
-          key: 'stdAvgPoint'
+          title: `前${minTeamGames}局均分`,
+          key: 'stdAvgPoint',
+          sortable: true
         },
         {
           title: '总分',
-          key: 'totalScore'
+          key: 'totalScore',
+          sortable: true
         },
         {
           title: '队员数',
           key: 'playerNum'
         }
-      ],
-      playerScoreCols: [
-        {
-          title: '排名',
-          key: 'ranking'
-        },
-        {
-          title: '昵称',
-          key: 'nickName'
-        },
-        {
-          title: '总局数',
-          key: 'totalGames'
-        },
-        {
-          title: '均分',
-          key: 'avgPoint'
-        },
-        {
-          title: '有效均分',
-          key: 'validAvgPoint'
-        },
-        {
-          title: '总分',
-          key: 'totalScore'
-        }
       ]
     }
-  },
-  created: function () {
-    this.init()
-  },
-  computed: {
-    ...mapGetters([
-      'teamScore', 'playerScore'
-    ])
   },
   methods: {
     ...mapActions({
