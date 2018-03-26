@@ -52,42 +52,16 @@ export default new Vuex.Store({
   getters: {
     playerScore: function (state) {
       const { points, minPlayerGames, minTeamGames } = state.rule
+
       const calcPoints = function ({ score }) {
         let tmpPoints = [0, 0, 0, 0]
-        if (score && score.length === 4) {
-          if (score[0] === score[1]) {
-            if (score[1] === score[2]) {
-              if (score[2] === score[3]) {
-                tmpPoints[0] = tmpPoints[1] = tmpPoints[2] = tmpPoints[3] = (points[0] + points[1] + points[2] + points[3]) / 4
-              } else {
-                tmpPoints[0] = tmpPoints[1] = tmpPoints[2] = (points[0] + points[1] + points[2]) / 3
-                tmpPoints[3] = points[3]
-              }
-            } else {
-              tmpPoints[0] = tmpPoints[1] = (points[0] + points[1]) / 2
-              tmpPoints[2] = points[2]
-              tmpPoints[3] = points[3]
-            }
-          } else {
-            tmpPoints[0] = points[0]
-            if (score[1] === score[2]) {
-              if (score[2] === score[3]) {
-                tmpPoints[1] = tmpPoints[2] = tmpPoints[3] = (points[1] + points[2] + points[3]) / 3
-              } else {
-                tmpPoints[1] = tmpPoints[2] = (points[1] + points[2]) / 2
-                tmpPoints[3] = points[3]
-              }
-            } else {
-              tmpPoints[1] = points[1]
-              if (score[2] === score[3]) {
-                tmpPoints[2] = tmpPoints[3] = (points[2] + points[3]) / 2
-              } else {
-                tmpPoints[2] = points[2]
-                tmpPoints[3] = points[3]
-              }
-            }
-          }
-        }
+        let tmpScore = _.groupBy(score.map((s, index) => ({ ...s, index })), s => s.score)
+        _.each(tmpScore, (value, key) => {
+          let totalPoints = _.sumBy(value, val => points[val.index])
+          _.each(value, val => {
+            tmpPoints[val.index] = totalPoints / value.length
+          })
+        })
         return tmpPoints
       }
 
