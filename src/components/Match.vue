@@ -7,7 +7,7 @@
       <Table border stripe :columns="playerScoreCols" :data="playerScore"></Table>
     </div>
     <div>
-      <Rule v-bind="rule" />
+      <Rule :model="rule" />
     </div>
   </div>
 </template>
@@ -120,7 +120,10 @@ export default {
   },
   created: async function () {
     await this.init()
-    this.rule = _.cloneDeep(this.$store.state.rule)
+    const gameRule = _.cloneDeep(this.$store.state.rule)
+    if (gameRule) {
+      this.rule = gameRule
+    }
   },
   computed: {
     ...mapGetters([

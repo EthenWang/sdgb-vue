@@ -10,7 +10,7 @@ export const matchTypes = [
     code: 's'
   },
   {
-    title: '团体+个人赛',
+    title: '团体 + 个人赛',
     code: 'ts'
   }
 ]
