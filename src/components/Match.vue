@@ -18,6 +18,7 @@ import { mapActions, mapGetters } from 'vuex'
 import Vue from 'vue'
 import { Row, Col } from 'iview'
 import Rule from './Rule'
+import * as _ from 'lodash'
 
 const TeamPlayer = Vue.extend({
   props: {
@@ -104,21 +105,22 @@ export default {
         }
       ],
       rule: {
-        matchType: 'ts',
-        minTeamPlayers: 4,
-        maxTeamPlayers: 6,
-        minTeamGames: 120,
-        minPlayerGames: 24,
-        maxPlayerGames: 48,
+        matchType: '',
+        minTeamPlayers: 0,
+        maxTeamPlayers: 0,
+        minTeamGames: 0,
+        minPlayerGames: 0,
+        maxPlayerGames: 0,
         globalRanking: false,
-        points: [4, 2, 1, 0],
+        points: [0, 0, 0, 0],
         breakPunish: false,
         punishPoint: 0
       }
     }
   },
-  created: function () {
-    this.init()
+  created: async function () {
+    await this.init()
+    this.rule = _.cloneDeep(this.$store.state.rule)
   },
   computed: {
     ...mapGetters([

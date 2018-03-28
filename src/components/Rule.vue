@@ -78,7 +78,7 @@
     <FormItem>
       <Row>
         <Col span="10">
-          <Input v-model="punishPoint" type="number" :disabled="!breakPunish">
+          <Input v-model="punishPoint" :number="true" :disabled="!breakPunish">
             <Checkbox v-model="breakPunish" slot="prepend" @on-change="onChangeBreakPunish">断线罚分</Checkbox>
           </Input>
         </Col>
