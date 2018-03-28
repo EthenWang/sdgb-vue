@@ -1,5 +1,20 @@
 import * as _ from 'lodash'
 
+export const matchTypes = [
+  {
+    title: '团体赛',
+    code: 't'
+  },
+  {
+    title: '个人赛',
+    code: 's'
+  },
+  {
+    title: '团体+个人赛',
+    code: 'ts'
+  }
+]
+
 function isArray (arg) {
   if (typeof arg === 'object') {
     return Object.prototype.toString.call(arg) === '[object Array]'
@@ -74,14 +89,16 @@ export function generateTestData () {
     players,
     games,
     rule: {
-      matchType: 'tp',
-      minTeamPlayer: 4,
-      maxTeamPlayer: 6,
+      matchType: 'ts',
+      minTeamPlayers: 4,
+      maxTeamPlayers: 6,
       minTeamGames: 120,
       minPlayerGames: 24,
       maxPlayerGames: 48,
       globalRanking: false,
-      points: [4, 2, 1, 0]
+      points: [4, 2, 1, 0],
+      breakPunish: false,
+      punishPoint: 0
     }
   }
 }

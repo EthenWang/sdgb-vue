@@ -6,6 +6,9 @@
     <div class="player-score">
       <Table border stripe :columns="playerScoreCols" :data="playerScore"></Table>
     </div>
+    <div>
+      <Rule v-bind="rule" />
+    </div>
   </div>
 </template>
 
@@ -14,6 +17,7 @@ import * as actions from '../store/actions'
 import { mapActions, mapGetters } from 'vuex'
 import Vue from 'vue'
 import { Row, Col } from 'iview'
+import Rule from './Rule'
 
 const TeamPlayer = Vue.extend({
   props: {
@@ -63,6 +67,9 @@ const TeamPlayer = Vue.extend({
 
 export default {
   name: 'Match',
+  components: {
+    Rule
+  },
   data: function () {
     return {
       playerScoreCols: [
@@ -95,10 +102,22 @@ export default {
           key: 'totalScore',
           sortable: true
         }
-      ]
+      ],
+      rule: {
+        matchType: 'ts',
+        minTeamPlayers: 4,
+        maxTeamPlayers: 6,
+        minTeamGames: 120,
+        minPlayerGames: 24,
+        maxPlayerGames: 48,
+        globalRanking: false,
+        points: [4, 2, 1, 0],
+        breakPunish: false,
+        punishPoint: 0
+      }
     }
   },
-  mounted: function () {
+  created: function () {
     this.init()
   },
   computed: {

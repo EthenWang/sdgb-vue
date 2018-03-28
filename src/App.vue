@@ -24,7 +24,7 @@ export default {
 </script>
 
 <style>
-@import './assets/sdgb.scss';
+@import './assets/sdgb.less';
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
