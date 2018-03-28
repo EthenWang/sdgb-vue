@@ -3,7 +3,7 @@
     <Row type="flex" justify="center" :gutter="20">
       <Col span="5">
         <FormItem label="队名">
-          <Select v-model="playerScore.teamId" @on-change="onTeamChange">
+          <Select v-model="playerScore.teamId">
             <Option
               v-for="team in teams"
               v-if="team"
@@ -65,31 +65,26 @@ export default {
       required: true
     }
   },
-  data: function () {
-    return {
-      teamPlayers: []
-    }
-  },
-  computed: {
-    ...mapState(['players']),
-    teams: function () {
-      return this.players.map(p => p.team)
-    }
-  },
   mounted: function () {
     this.$emit('scoreItemMounted', {
       colspan: 17
     })
   },
-  methods: {
-    nickName,
-    onTeamChange: function (teamId) {
+  computed: {
+    ...mapState(['players']),
+    teams: function () {
+      return this.players.map(p => p.team)
+    },
+    teamPlayers: function () {
       const index = _.findIndex(this.players, p => p.team.id === this.playerScore.teamId)
       if (index !== -1) {
-        this.teamPlayers = this.players[index].players
+        return this.players[index].players
       }
       return []
     }
+  },
+  methods: {
+    nickName
   }
 }
 </script>

@@ -36,13 +36,14 @@ export default {
   },
   data: function () {
     return {
-      colspan: 0
+      colspan: 0,
+      gameScore: buildGameScore()
     }
   },
+  created: function () {
+    this.gameScore = buildGameScore(this.$store, this.gameId)
+  },
   computed: {
-    gameScore: function () {
-      return buildGameScore(this.$store, this.gameId)
-    },
     validScore: function () {
       if (this.totalScore !== 0) {
         return false

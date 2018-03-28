@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as _ from 'lodash'
 import * as actions from './actions'
-import { ajaxCall } from '../utils/ajax'
 import { nickName, generateTestData } from '../utils'
 
 Vue.use(Vuex)
@@ -19,9 +18,7 @@ export default new Vuex.Store({
 
   actions: {
     [actions.INIT_MATCH_STATE] ({ commit, state }) {
-      /* ajaxCall({
-        url: `api/match/${state.matchId}`
-      }, function (response) {
+      /* Vue.axios.get(`api/match/${state.matchId}`).then(response => {
         commit({
           type: actions.INIT_MATCH_STATE,
           data: response
@@ -38,9 +35,7 @@ export default new Vuex.Store({
         return
       }
 
-      ajaxCall({
-        url: `api/team/getplayers/${teamId}`
-      }, function (response) {
+      Vue.axios.get(`api/team/getplayers/${teamId}`).then(response => {
         commit({
           type: actions.GET_TEAM_PLAYERS,
           data: response
@@ -50,7 +45,22 @@ export default new Vuex.Store({
   },
 
   getters: {
-    playerScore: function (state) {
+    playerObject: function (state) {
+      let obj = {}
+      state.players.forEach(p => {
+        const playerNum = p.players.length
+        p.players.forEach(p1 => {
+          obj[`${p1.id}`] = {
+            ...p1,
+            teamId: p.team.id,
+            teamName: p.team.name,
+            teamPlayerNum: playerNum
+          }
+        })
+      })
+      return obj
+    },
+    playerScore: function (state, getters) {
       const { points, minPlayerGames, minTeamGames } = state.rule
 
       const calcPoints = function ({ score }) {
@@ -65,39 +75,24 @@ export default new Vuex.Store({
         return tmpPoints
       }
 
-      let playerCache = {}
-      const findPlayer = function (playerId) {
-        if (playerCache[playerId] != null) {
-          return playerCache[playerId]
-        }
-
-        let player
-        let team = _.find(state.players, t => {
-          player = _.find(t.players, p => p.id === playerId)
-          return player !== undefined
-        })
-        playerCache[playerId] = { team, player }
-        return { team, player }
-      }
-
       let score = []
       state.games.forEach(g => {
         let tmpPoints = calcPoints(g)
         g.score.forEach((s, i) => {
           const index = _.findIndex(score, a => a.playerId === s.playerId)
-          const { team, player } = findPlayer(s.playerId)
+          const { name, webId, teamName, teamPlayerNum } = getters.playerObject[s.playerId]
           if (index === -1) {
             score.push({
               playerId: s.playerId,
-              playerName: player.name,
-              webId: player.webId,
-              nickName: nickName(player),
-              teamName: team.team.name,
+              playerName: name,
+              webId: webId,
+              nickName: nickName({ name, webId }),
+              teamName: teamName,
               totalPoint: tmpPoints[i],
               totalGames: 1,
               totalScore: s.score,
-              teamPlayerNum: team.players.length,
-              teamValidGameNum: minTeamGames / team.players.length,
+              teamPlayerNum: teamPlayerNum,
+              teamValidGameNum: minTeamGames / teamPlayerNum,
               teamValidTotalPoint: 0,
               avgPoint: tmpPoints[i]
             })

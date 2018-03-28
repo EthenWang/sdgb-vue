@@ -7153,6 +7153,10 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+vue-axios@^2.1.0:
+  version "2.1.0"
+  resolved "http://registry.npm.taobao.org/vue-axios/download/vue-axios-2.1.0.tgz#87d966583ff77d4c441ef85840a39db356148ef3"
+
 vue-eslint-parser@^2.0.3:
   version "2.0.3"
   resolved "http://registry.npm.taobao.org/vue-eslint-parser/download/vue-eslint-parser-2.0.3.tgz#c268c96c6d94cfe3d938a5f7593959b0ca3360d1"

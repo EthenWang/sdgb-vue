@@ -13,8 +13,7 @@
 </template>
 
 <script>
-import * as actions from '../store/actions'
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import Vue from 'vue'
 import { Row, Col } from 'iview'
 import Rule from './Rule'
@@ -118,11 +117,9 @@ export default {
       }
     }
   },
-  created: async function () {
-    await this.init()
-    const gameRule = _.cloneDeep(this.$store.state.rule)
-    if (gameRule) {
-      this.rule = gameRule
+  mounted: function () {
+    if (this.$store.state.rule) {
+      this.rule = _.cloneDeep(this.$store.state.rule)
     }
   },
   computed: {
@@ -179,15 +176,11 @@ export default {
         },
         {
           title: '队员数',
-          key: 'playerNum'
+          key: 'playerNum',
+          sortable: true
         }
       ]
     }
-  },
-  methods: {
-    ...mapActions({
-      init: actions.INIT_MATCH_STATE
-    })
   }
 }
 </script>

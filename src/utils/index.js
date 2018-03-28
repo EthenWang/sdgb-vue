@@ -15,16 +15,21 @@ export const matchTypes = [
   }
 ]
 
-function isArray (arg) {
-  if (typeof arg === 'object') {
-    return Object.prototype.toString.call(arg) === '[object Array]'
-  }
-  return false
-}
-
 export function buildGameScore (store, gameId) {
-  if (store && store.games && isArray(store.games)) {
-    return _.filter(store.games, game => game.id === gameId)
+  if (store.state && store.state.games && Array.isArray(store.state.games)) {
+    const game = _.find(store.state.games, g => g.id === gameId)
+    if (game) {
+      return game.score.map(s => {
+        const player = store.getters.playerObject[s.playerId]
+        if (player) {
+          return {
+            ...s,
+            teamId: player.teamId
+          }
+        }
+        return {}
+      })
+    }
   }
   return [{}, {}, {}, {}].map(a => ({
     teamId: 0,
@@ -36,10 +41,6 @@ export function buildGameScore (store, gameId) {
 
 export function nickName ({ name, webId }) {
   return `${name}[${webId}]`
-}
-
-export function copyArray (arr) {
-  return JSON.parse(JSON.stringify(arr))
 }
 
 export function generateTestData () {
@@ -63,7 +64,7 @@ export function generateTestData () {
   })
 
   index = 0
-  const games = _.range(1, totalPlayerNum * 50).map(n => {
+  const games = _.range(1, totalPlayerNum * 48).map(n => {
     let totalScore = 0
     return {
       id: ++index,
