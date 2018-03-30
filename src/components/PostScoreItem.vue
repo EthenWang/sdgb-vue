@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import * as _ from 'lodash'
 import { nickName } from '../utils'
 
@@ -72,9 +72,7 @@ export default {
   },
   computed: {
     ...mapState(['players']),
-    teams: function () {
-      return this.players.map(p => p.team)
-    },
+    ...mapGetters(['teams']),
     teamPlayers: function () {
       const index = _.findIndex(this.players, p => p.team.id === this.playerScore.teamId)
       if (index !== -1) {

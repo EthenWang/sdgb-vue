@@ -45,33 +45,35 @@ export default new Vuex.Store({
   },
 
   getters: {
+    teams: function (state) {
+      return _.map(state.players, p => p.team)
+    },
     playerObject: function (state) {
-      let obj = {}
-      state.players.forEach(p => {
-        const playerNum = p.players.length
-        p.players.forEach(p1 => {
-          obj[`${p1.id}`] = {
-            ...p1,
-            teamId: p.team.id,
-            teamName: p.team.name,
-            teamPlayerNum: playerNum
+      return _.transform(state.players, (result, { team, players }) => {
+        _.each(players, p => {
+          result[p.id] = {
+            ...p,
+            teamId: team.id,
+            teamName: team.name,
+            teamPlayerNum: players.length
           }
         })
-      })
-      return obj
+      }, {})
     },
     playerScore: function (state, getters) {
       const { points, minPlayerGames, minTeamGames } = state.rule
 
       const calcPoints = function ({ score }) {
         let tmpPoints = [0, 0, 0, 0]
-        let tmpScore = _.groupBy(score.map((s, index) => ({ ...s, index })), s => s.score)
-        _.each(tmpScore, (value, key) => {
-          let totalPoints = _.sumBy(value, val => points[val.index])
-          _.each(value, val => {
-            tmpPoints[val.index] = totalPoints / value.length
-          })
-        })
+        _.each(
+          _.groupBy(score.map((s, index) => ({ ...s, index })), s => s.score),
+          (value, key) => {
+            let totalPoints = _.sumBy(value, val => points[val.index])
+            _.each(value, val => {
+              tmpPoints[val.index] = totalPoints / value.length
+            })
+          }
+        )
         return tmpPoints
       }
 

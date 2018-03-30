@@ -2,30 +2,28 @@
   <div>
     <div id="app">
       <img src="./assets/logo.png">
-      <router-view/>
     </div>
-    <PostScore :gameId="100" />
-    <Match />
-    <PlayerList />
+    <Layout>
+      <router-view />
+      <p slot="footer">
+        2001 - {{ new Date().getFullYear() }} 盛殿国标麻将运动协会
+      </p>
+    </Layout>
   </div>
 </template>
 
 <script>
-import PostScore from './components/PostScore'
-import Match from './components/Match'
-import PlayerList from './components/PlayerList'
 import * as actions from './store/actions'
 import { mapActions } from 'vuex'
+import Layout from './components/Layout'
 
 export default {
   name: 'App',
   components: {
-    PostScore, Match, PlayerList
+    Layout
   },
-  created: async function () {
-    /* Mot 100% sure if needing to make it as an async method. 'init' will fire INIT_MATCH_STATE action which will load data from server.
-       I just want to make sure that 'created' in child components won't be executed until its parent 'created' executing finishes */
-    await this.init()
+  created: function () {
+    this.init()
   },
   methods: {
     ...mapActions({

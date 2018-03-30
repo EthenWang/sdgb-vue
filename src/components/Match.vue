@@ -6,9 +6,6 @@
     <div class="player-score">
       <Table border stripe :columns="playerScoreCols" :data="playerScore"></Table>
     </div>
-    <div>
-      <Rule :model="rule" />
-    </div>
   </div>
 </template>
 
@@ -16,8 +13,6 @@
 import { mapGetters } from 'vuex'
 import Vue from 'vue'
 import { Row, Col } from 'iview'
-import Rule from './Rule'
-import * as _ from 'lodash'
 
 const TeamPlayer = Vue.extend({
   props: {
@@ -67,9 +62,6 @@ const TeamPlayer = Vue.extend({
 
 export default {
   name: 'Match',
-  components: {
-    Rule
-  },
   data: function () {
     return {
       playerScoreCols: [
@@ -102,24 +94,7 @@ export default {
           key: 'totalScore',
           sortable: true
         }
-      ],
-      rule: {
-        matchType: '',
-        minTeamPlayers: 0,
-        maxTeamPlayers: 0,
-        minTeamGames: 0,
-        minPlayerGames: 0,
-        maxPlayerGames: 0,
-        globalRanking: false,
-        points: [0, 0, 0, 0],
-        breakPunish: false,
-        punishPoint: 0
-      }
-    }
-  },
-  mounted: function () {
-    if (this.$store.state.rule) {
-      this.rule = _.cloneDeep(this.$store.state.rule)
+      ]
     }
   },
   computed: {

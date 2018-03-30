@@ -24,6 +24,7 @@
 import * as _ from 'lodash'
 import PostScoreItem from './PostScoreItem'
 import { buildGameScore } from '../utils'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   components: {
@@ -41,23 +42,42 @@ export default {
     }
   },
   created: function () {
-    this.gameScore = buildGameScore(this.$store, this.gameId)
+    if (this.gameId) {
+      this.gameScore = buildGameScore(this.$store, this.gameId)
+    }
   },
   computed: {
+    ...mapState(['rule']),
+    ...mapGetters(['teams', 'playerObject']),
     validScore: function () {
       if (this.totalScore !== 0) {
         return false
       }
-      /* to do score input validation ... */
+      for (let i = 0; i < 4; i++) {
+        let playerId = this.gameScore[i].playerId
+        if (!playerId || !this.playerObject[playerId]) {
+          return false
+        }
+      }
+      if (_.groupBy(this.gameScore, 'teamId').length !== 4) {
+        return false
+      }
       return true
     },
     totalScore: function () {
-      return _.sumBy(this.gameScore, 'score')
+      let sum = _.sumBy(this.gameScore, 'score')
+      if (this.rule.breakPunish) {
+        sum += _.sumBy(this.gameScore, 'break') * this.rule.punishPoint
+      }
+      return sum
     }
   },
   methods: {
     onSubmitScoreClick: function () {
       /* to do submit score */
+      if (this.validScore) {
+
+      }
     },
     onScoreItemMounted: function ({ colspan }) {
       this.colspan = colspan - 3 // submit button width 3

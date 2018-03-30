@@ -16,7 +16,7 @@ export const matchTypes = [
 ]
 
 export function buildGameScore (store, gameId) {
-  if (store.state && store.state.games && Array.isArray(store.state.games)) {
+  if (store && store.state && store.state.games && Array.isArray(store.state.games)) {
     const game = _.find(store.state.games, g => g.id === gameId)
     if (game) {
       return game.score.map(s => {
@@ -35,7 +35,7 @@ export function buildGameScore (store, gameId) {
     teamId: 0,
     playerId: 0,
     score: 0,
-    breakTime: 0
+    break: 0
   }))
 }
 
@@ -75,12 +75,14 @@ export function generateTestData () {
           totalScore = totalScore + score
           return {
             playerId: p.players[m].id,
-            score
+            score,
+            break: 0
           }
         }
         return {
           playerId: p.players[m].id,
-          score: -1 * totalScore
+          score: -1 * totalScore,
+          break: 0
         }
       }), ['score'], ['desc'])
     }
