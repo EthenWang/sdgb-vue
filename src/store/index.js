@@ -60,8 +60,22 @@ export default new Vuex.Store({
         })
       }, {})
     },
+    validGameNum: function ({ games, rule }, { playerObject }) {
+      if (games && rule && playerObject) {
+        const { minPlayerGames, maxPlayerGames } = rule
+        const num = Math.round(games.length * 4 / _.keys(playerObject).length)
+        if (num > maxPlayerGames) {
+          return maxPlayerGames
+        }
+        if (num < minPlayerGames) {
+          return minPlayerGames
+        }
+        return num
+      }
+      return 0
+    },
     playerScore: function (state, getters) {
-      const { points, minPlayerGames, minTeamGames } = state.rule
+      const { points, minTeamGames } = state.rule
 
       const calcPoints = function ({ score }) {
         let tmpPoints = [0, 0, 0, 0]
@@ -96,14 +110,15 @@ export default new Vuex.Store({
               teamPlayerNum: teamPlayerNum,
               teamValidGameNum: minTeamGames / teamPlayerNum,
               teamValidTotalPoint: 0,
-              avgPoint: tmpPoints[i]
+              avgPoint: tmpPoints[i],
+              validAvgPoint: 0
             })
           } else {
             score[index].totalPoint += tmpPoints[i]
             score[index].totalGames += 1
             score[index].totalScore += s.score
             score[index].avgPoint = _.round(score[index].totalPoint / score[index].totalGames, 5)
-            if (score[index].totalGames >= minPlayerGames) {
+            if (score[index].totalGames >= getters.validGameNum) {
               score[index].validAvgPoint = score[index].avgPoint
             }
             if (score[index].totalGames === score[index].teamValidGameNum) {
@@ -113,7 +128,7 @@ export default new Vuex.Store({
         })
       })
 
-      return _.orderBy(score, 'validAvgPoint', 'desc').map((s, i) => ({
+      return _.orderBy(score, ['validAvgPoint', 'totalGames'], ['desc', 'desc']).map((s, i) => ({
         ...s,
         ranking: i + 1
       }))

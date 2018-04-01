@@ -1,15 +1,13 @@
 <template>
-  <div>
+  <Layout>
     <div id="app">
       <img src="./assets/logo.png">
     </div>
-    <Layout>
-      <router-view />
-      <p slot="footer">
-        2001 - {{ new Date().getFullYear() }} 盛殿国标麻将运动协会
-      </p>
-    </Layout>
-  </div>
+    <router-view />
+    <p slot="footer">
+      2001 - {{ new Date().getFullYear() }} 盛殿国标麻将运动协会
+    </p>
+  </Layout>
 </template>
 
 <script>

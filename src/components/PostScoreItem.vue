@@ -1,51 +1,47 @@
 <template>
-  <Form label-position="top">
-    <Row type="flex" justify="center" :gutter="20">
-      <Col span="5">
-        <FormItem label="队名">
-          <Select v-model="playerScore.teamId">
-            <Option
-              v-for="team in teams"
-              v-if="team"
-              :value="team.id"
-              :key="team.id"
-            >
-              {{team.name}}
-            </Option>
-          </Select>
-        </FormItem>
-      </Col>
-      <Col span="6">
-        <FormItem label="网络ID">
-          <Select v-model="playerScore.playerId">
-            <Option
-              v-for="player in teamPlayers"
-              v-if="player"
-              :value="player.id"
-              :label="player.name"
-              :key="player.id"
-            >
-            </Option>
-          </Select>
-        </FormItem>
-      </Col>
-      <Col span="3">
-        <FormItem label="比分">
-          <InputNumber v-model="playerScore.score"></InputNumber>
-        </FormItem>
-      </Col>
-      <Col span="3">
-        <FormItem label="断线">
-          <InputNumber
-            v-model="playerScore.break"
-            :max="5"
-            :min="0"
-            :editable="false"
-          ></InputNumber>
-        </FormItem>
-      </Col>
-    </Row>
-  </Form>
+  <Row type="flex" justify="center" :gutter="20">
+    <Col span="5">
+      <FormItem label="队名" prop="teamId">
+        <Select v-model="playerScore.teamId">
+          <Option
+            v-for="team in teams"
+            :value="team.id"
+            :label="team.name"
+            :key="team.id"
+          >
+          </Option>
+        </Select>
+      </FormItem>
+    </Col>
+    <Col span="6">
+      <FormItem label="网络ID" prop="playerId">
+        <Select v-model="playerScore.playerId">
+          <Option
+            v-for="player in teamPlayers"
+            :value="player.id"
+            :label="player.name"
+            :key="player.id"
+          >
+          </Option>
+        </Select>
+      </FormItem>
+    </Col>
+    <Col span="3">
+      <FormItem label="比分" prop="score">
+        <InputNumber v-model="playerScore.score"></InputNumber>
+      </FormItem>
+    </Col>
+    <Col span="3">
+      <FormItem label="断线" prop="break">
+        <InputNumber
+          v-model="playerScore.break"
+          :max="5"
+          :min="0"
+          :editable="false"
+        ></InputNumber>
+      </FormItem>
+    </Col>
+  </Row>
 </template>
 
 <script>
@@ -65,10 +61,18 @@ export default {
       required: true
     }
   },
-  mounted: function () {
-    this.$emit('scoreItemMounted', {
-      colspan: 17
-    })
+  data: function () {
+    return {
+      colspan: 17,
+      ruleValidate: {
+        playerId: [
+          { required: true, message: '网络ID必填' }
+        ],
+        score: [
+          { required: true, message: '比分不能为空' }
+        ]
+      }
+    }
   },
   computed: {
     ...mapState(['players']),

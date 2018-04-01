@@ -21,6 +21,9 @@
   margin: 0 auto;
   margin-right: 20px;
 }
+.layout-nav a {
+  color: #d7dde4;
+}
 .layout-footer-center {
   text-align: center;
 }
@@ -31,23 +34,24 @@
     <Layout>
       <Header>
         <Menu mode="horizontal" theme="dark" active-name="1">
-          <div class="layout-logo"></div>
+          <div class="layout-logo">
+          </div>
           <div class="layout-nav">
             <MenuItem name="1">
-              <Icon type="ios-navigate"></Icon>
-              Item 1
+              <Icon type="home"></Icon>
+              <router-link to="/">成绩查询</router-link>
             </MenuItem>
             <MenuItem name="2">
               <Icon type="ios-keypad"></Icon>
-              Item 2
+              <router-link to="/postscore">报分</router-link>
             </MenuItem>
             <MenuItem name="3">
-              <Icon type="ios-analytics"></Icon>
-              Item 3
+              <Icon type="settings"></Icon>
+              <router-link to="/matchmanage">比赛管理</router-link>
             </MenuItem>
             <MenuItem name="4">
-              <Icon type="ios-paper"></Icon>
-              Item 4
+              <Icon type="log-in"></Icon>
+              <router-link to="/">登录</router-link>
             </MenuItem>
           </div>
         </Menu>

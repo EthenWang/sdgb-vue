@@ -32,11 +32,15 @@ export function buildGameScore (store, gameId) {
     }
   }
   return [{}, {}, {}, {}].map(a => ({
-    teamId: 0,
-    playerId: 0,
+    teamId: '',
+    playerId: '',
     score: 0,
     break: 0
   }))
+}
+
+export function isTeamMatch (matchCode) {
+  return matchCode === 't' || matchCode === 'ts'
 }
 
 export function nickName ({ name, webId }) {
@@ -47,7 +51,7 @@ export function generateTestData () {
   let index = 0
   let totalPlayerNum = 0
 
-  const players = _.range(1, 40).map(n => {
+  const players = _.range(1, 41).map(n => {
     let playerNum = _.random(4, 6) // number of players in a team range from 4 ~ 6
     totalPlayerNum = totalPlayerNum + playerNum
     return {
@@ -64,7 +68,7 @@ export function generateTestData () {
   })
 
   index = 0
-  const games = _.range(1, totalPlayerNum * 48).map(n => {
+  const games = _.range(1, totalPlayerNum * 12 + 1).map(n => {
     let totalScore = 0
     return {
       id: ++index,

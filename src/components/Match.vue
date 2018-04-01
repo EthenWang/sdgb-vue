@@ -1,9 +1,26 @@
+<style scoped>
+.score-title {
+  font-size: x-large;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.score-title-extra {
+  font-size: smaller;
+}
+</style>
+
 <template>
   <div>
     <div class="team-score">
+      <p class="score-title">团体赛成绩</p>
       <Table border stripe :columns="teamScoreCols" :data="teamScore"></Table>
     </div>
     <div class="player-score">
+      <div class="score-title">
+        <span>个人赛成绩</span>
+        <span class="score-title-extra">当前有效局数: {{ validGameNum }}</span>
+      </div>
       <Table border stripe :columns="playerScoreCols" :data="playerScore"></Table>
     </div>
   </div>
@@ -72,7 +89,8 @@ export default {
         },
         {
           title: '昵称',
-          key: 'nickName'
+          key: 'nickName',
+          sortable: true
         },
         {
           title: '总局数',
@@ -99,7 +117,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'teamScore', 'playerScore'
+      'teamScore', 'playerScore', 'validGameNum'
     ]),
     teamScoreCols: function () {
       const { minTeamGames } = this.$store.state.rule
@@ -122,7 +140,8 @@ export default {
         },
         {
           title: '队名',
-          key: 'teamName'
+          key: 'teamName',
+          sortable: true
         },
         {
           title: '总局数',
