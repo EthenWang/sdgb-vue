@@ -1,5 +1,5 @@
 <template>
-  <Form label-position="top">
+  <div>
     <PostScoreItem
       v-for="index in [0, 1, 2, 3]"
       :key="index"
@@ -17,14 +17,15 @@
         </Button>
       </Col>
     </Row>
-  </Form>
+  </div>
 </template>
 
 <script>
 import * as _ from 'lodash'
 import PostScoreItem from './PostScoreItem'
-import { buildGameScore } from '../utils'
+import { buildGameScore, isTeamMatch } from '../utils'
 import { mapGetters, mapState } from 'vuex'
+import { POST_GAME_SCORE } from '../store/actions'
 
 export default {
   components: {
@@ -32,20 +33,6 @@ export default {
   },
   props: ['gameId'],
   data: function () {
-    /* const teamRule = function (index) {
-      const teamMatch = isTeamMatch(this.rule.matchType)
-      return function (rule, value, callback) {
-        if (index >= 1 && teamMatch) {
-          _.each(this.getGameScore, (s, i) => {
-            if (i < index && s.teamId === value) {
-              callback(new Error(`与第${i + 1}同队`))
-              return
-            }
-            callback()
-          })
-        }
-      }
-    } */
     return {
       colspan: 0,
       gameScore: buildGameScore()
@@ -55,8 +42,7 @@ export default {
     this.getGameScore(this.gameId)
   },
   mounted: function () {
-    console.dir(this.$refs)
-    this.colspan = this.$refs['items'][0].colspan - 3 // submit button width 3
+    this.colspan = this.$refs.items[0].colspan - 3 // submit button width 3
   },
   beforeRouteUpdate (to, from, next) {
     this.getGameScore(to.params.gameId)
@@ -69,13 +55,22 @@ export default {
       if (this.totalScore !== 0) {
         return false
       }
+
+      let allZero = true
       for (let i = 0; i < 4; i++) {
+        if (this.gameScore[i].score !== 0) {
+          allZero = false
+        }
         let playerId = this.gameScore[i].playerId
         if (!playerId || !this.playerObject[playerId]) {
           return false
         }
       }
-      if (_.keys(_.groupBy(this.gameScore, 'teamId')).length !== 4) {
+      if (allZero) {
+        return false
+      }
+
+      if (isTeamMatch(this.rule.matchType) && _.keys(_.groupBy(this.gameScore, 'teamId')).length !== 4) {
         return false
       }
       return true
@@ -93,8 +88,17 @@ export default {
   },
   methods: {
     onSubmitScoreClick: function () {
-      if (this.validScore) {
-
+      let valid = true
+      for (let i = 0; i < this.$refs.items.length; i++) {
+        if (!this.$refs.items[i].validateInputs()) {
+          valid = false
+        }
+      }
+      if (this.validScore && valid) {
+        this.$store.dispatch({
+          type: POST_GAME_SCORE,
+          score: this.gameScore
+        })
       }
     },
     getGameScore: function (gameId) {

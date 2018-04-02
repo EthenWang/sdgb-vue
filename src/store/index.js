@@ -17,7 +17,7 @@ export default new Vuex.Store({
   },
 
   actions: {
-    [actions.INIT_MATCH_STATE] ({ commit, state }) {
+    [actions.INIT_MATCH_STATE] ({ commit, context }) {
       /* Vue.axios.get(`api/match/${state.matchId}`).then(response => {
         commit({
           type: actions.INIT_MATCH_STATE,
@@ -30,8 +30,8 @@ export default new Vuex.Store({
       })
     },
 
-    [actions.GET_TEAM_PLAYERS] ({ commit, state }, teamId) {
-      if (_.some(state.players, { teamId })) {
+    [actions.GET_TEAM_PLAYERS] ({ commit, context }, { teamId }) {
+      if (_.some(context.players, { teamId })) {
         return
       }
 
@@ -41,6 +41,11 @@ export default new Vuex.Store({
           data: response
         })
       })
+    },
+
+    [actions.POST_GAME_SCORE] ({ commit, context }, { score }) {
+      console.log('post game score')
+      console.dir(score)
     }
   },
 
