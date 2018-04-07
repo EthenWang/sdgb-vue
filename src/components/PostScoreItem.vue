@@ -7,7 +7,7 @@
   >
     <Row type="flex" justify="center" :gutter="20">
       <Col span="5">
-        <FormItem label="队名" prop="teamId">
+        <FormItem :label="`队名${index + 1}`" prop="teamId">
           <Select v-model="playerScore.teamId">
             <Option
               v-for="team in teams"

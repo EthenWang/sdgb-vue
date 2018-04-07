@@ -1,6 +1,32 @@
+<style lang="less">
+  .vertical-center-modal{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ivu-modal{
+        top: 0;
+    }
+  }
+</style>
+
 <template>
   <div class="player-list">
+    <Row type="flex" justify="end">
+      <Col span="1">
+        <Tooltip content="编辑队员" placement="top">
+          <a href="#" @click="onEditPlayer"><Icon type="edit" size="25"></Icon></a>
+        </Tooltip>
+      </Col>
+      <Col span="1">
+        <Tooltip content="添加队员" placement="top">
+          <a href="#" @click="onAddPlayer"><Icon type="plus-round" size="30"></Icon></a>
+        </Tooltip>
+      </COl>
+    </Row>
     <Table border stripe :columns="playerCols" :data="playerList"></Table>
+    <EditPlayer ref="editPlayer" :show="showEditPlayer"/>
+    <AddPlayer ref="addPlayer" :show="showAddPlayer"/>
   </div>
 </template>
 
@@ -8,6 +34,8 @@
 import { mapState, mapGetters } from 'vuex'
 import Vue from 'vue'
 import { Row, Col } from 'iview'
+import AddPlayer from './AddPlayer'
+import EditPlayer from './EditPlayer'
 
 const TeamPlayer = Vue.extend({
   props: {
@@ -46,10 +74,12 @@ const TeamPlayer = Vue.extend({
 export default {
   name: 'PlayerList',
   components: {
-    TeamPlayer
+    TeamPlayer, AddPlayer, EditPlayer
   },
   data: function () {
     return {
+      showEditPlayer: false,
+      showAddPlayer: false,
       playerCols: [
         {
           type: 'expand',
@@ -74,7 +104,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['players']),
+    ...mapState(['players', 'rule']),
     ...mapGetters(['playerScore']),
     playerList: function () {
       return this.players.map(p => ({
@@ -82,6 +112,14 @@ export default {
         playerNum: p.players.length,
         players: p.players
       }))
+    }
+  },
+  methods: {
+    onEditPlayer: function () {
+      this.$refs.editPlayer.show = true
+    },
+    onAddPlayer: function () {
+      this.$refs.addPlayer.show = true
     }
   }
 }
