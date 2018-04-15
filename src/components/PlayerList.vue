@@ -25,8 +25,8 @@
       </COl>
     </Row>
     <Table border stripe :columns="playerCols" :data="playerList"></Table>
-    <EditPlayer ref="editPlayer" :show="showEditPlayer"/>
-    <AddPlayer ref="addPlayer" :show="showAddPlayer"/>
+    <EditPlayer ref="editPlayer" mode="edit"/>
+    <EditPlayer ref="addPlayer" mode="add"/>
   </div>
 </template>
 
@@ -34,7 +34,6 @@
 import { mapState, mapGetters } from 'vuex'
 import Vue from 'vue'
 import { Row, Col } from 'iview'
-import AddPlayer from './AddPlayer'
 import EditPlayer from './EditPlayer'
 
 const TeamPlayer = Vue.extend({
@@ -74,12 +73,10 @@ const TeamPlayer = Vue.extend({
 export default {
   name: 'PlayerList',
   components: {
-    TeamPlayer, AddPlayer, EditPlayer
+    TeamPlayer, EditPlayer
   },
   data: function () {
     return {
-      showEditPlayer: false,
-      showAddPlayer: false,
       playerCols: [
         {
           type: 'expand',
