@@ -4,6 +4,7 @@
     class-name="vertical-center-modal"
     :title="mode === 'add' ? '添加队员' : '编辑队员'"
     :width="650"
+    :loading="loading"
     @on-ok="onOk"
     @on-cancel="onCancel"
     @on-visible-change="onChangeVisible">
@@ -45,7 +46,7 @@
         </template>
         <template v-else>
           <Col span="4" class-name="form-el">
-            <Checkbox v-model="player.autoGenId">自动生成</Checkbox>
+            <Checkbox v-model="player.autoGenId" @on-change="onOk">自动生成</Checkbox>
           </Col>
           <Col span="6">
             <FormItem label="网络ID" :prop="`players[${index}].webId`">
@@ -73,6 +74,7 @@ export default {
   data: function () {
     return {
       show: false,
+      loading: true,
       editPlayers: {
         teamId: 0,
         teamName: '',
@@ -84,28 +86,50 @@ export default {
     ...mapState(['players', 'rule']),
     ...mapGetters(['teams']),
     ruleValidate: function () {
-      const validatePlayerName = function (rule, name, callback, source) {
-        console.log(rule)
-        console.log(source)
+      const getBindPlayer = fullField => {
+        const f = _.propertyOf(this.editPlayers)
+        const path = _.dropRight(_.toPath(fullField))
+        return {
+          index: path[path.length - 1],
+          player: f(path)
+        }
+      }
+
+      const validatePlayerName = ({ fullField }, name, callback) => {
         if (!name) {
           return callback(new Error(`队员名必填`))
         }
-        const { players } = this.players
-        if (_.findIndex(players, p => p.playerName === name) !== -1) {
+        if (this.mode === 'add' && _.findIndex(this.players, p => p.name === name) !== -1) {
+          return callback(new Error(`此名已存在`))
+        }
+
+        const { index } = getBindPlayer(fullField)
+        if (_.findIndex(this.editPlayers.players, (p, i) => p.name === name && i !== index) !== -1) {
           return callback(new Error(`此名已存在`))
         }
         callback()
       }
 
-      const validatePlayerWebId = function (rule, webId, callback, source) {
-        console.log(rule)
-        console.log(source)
+      const validatePlayerWebId = ({ fullField }, webId, callback) => {
+        const { index, player } = getBindPlayer(fullField)
+        console.log(player)
+        if (!player.autoGenId) {
+          if (!webId) {
+            return callback(new Error(`网络ID必填`))
+          }
+          if (this.mode === 'add' && _.findIndex(this.players, p => p.webId === webId) !== -1) {
+            return callback(new Error(`此ID已存在`))
+          }
+          if (_.findIndex(this.editPlayers.players, (p, i) => p.webId === webId && i !== index) !== -1) {
+            return callback(new Error(`此ID已存在`))
+          }
+        }
         callback()
       }
 
       const { maxTeamPlayers } = this.rule
       const playerValidator = {}
-      _.range(maxTeamPlayers).map(index => {
+      _.range(maxTeamPlayers).forEach(index => {
         playerValidator[`players[${index}].name`] = [
           { validator: validatePlayerName, trigger: 'blur' }
         ]
@@ -116,18 +140,12 @@ export default {
 
       return {
         teamId: [
-          { type: 'number', required: true, message: '请选择队名', trigger: 'blur' }
+          { type: 'number', required: true, message: '请选择队名', trigger: 'change' }
         ],
         teamName: [
           { required: true, message: '队名必填', trigger: 'blur' }
         ],
         ...playerValidator
-        /* name: [
-          { validator: validatePlayerName, trigger: 'blur' }
-        ],
-        webId: [
-          { validator: validatePlayerWebId, trigger: 'blur' }
-        ] */
       }
     }
   },
@@ -140,17 +158,25 @@ export default {
           players.push({
             name: '',
             webId: '',
-            id: 0,
+            id: '',
             deleted: false,
-            autoGenId: true
+            autoGenId: this.mode === 'add'
           })
         }
         this.editPlayers.players = players
       }
     },
     onOk: function () {
-      this.$refs.playerForm.validate()
-      this.onCancel()
+      this.$refs.playerForm.validate(valid => {
+        if (!valid) {
+          this.loading = false
+          this.$nextTick(() => {
+            this.loading = true
+          })
+          return
+        }
+        this.show = false
+      })
     },
     onCancel: function () {
       this.show = false
@@ -163,9 +189,9 @@ export default {
         players: _.range(maxTeamPlayers).map(n => ({
           name: '',
           webId: '',
-          id: 0,
+          id: '',
           deleted: false,
-          autoGenId: true
+          autoGenId: this.mode === 'add'
         }))
       }
     }

@@ -69,10 +69,9 @@ export default {
     }
   },
   data: function () {
-    const self = this
     const validateTeam = (rule, value, callback) => {
-      const teamMatch = isTeamMatch(self.rule.matchType)
-      const gameScore = self.$parent.gameScore
+      const teamMatch = isTeamMatch(this.rule.matchType)
+      const gameScore = this.$parent.gameScore
       if (!teamMatch) {
         return callback()
       }
@@ -80,7 +79,7 @@ export default {
         return callback(new Error(`请选择队名`))
       }
       for (let i = 0; i < gameScore.length; i++) {
-        if (i < self.index && gameScore[i].teamId === value) {
+        if (i < this.index && gameScore[i].teamId === value) {
           return callback(new Error(`与第${i + 1}名同队`))
         }
       }
