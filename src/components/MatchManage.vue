@@ -14,7 +14,6 @@
 <script>
 import PlayerList from './PlayerList'
 import Rule from './Rule'
-import * as _ from 'lodash'
 
 export default {
   name: 'MatchManage',

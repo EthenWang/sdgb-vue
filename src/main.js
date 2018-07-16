@@ -9,6 +9,9 @@ import store from './store'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import * as utils from './utils'
+import * as _ from 'lodash'
+
+Vue.prototype.$_ = _
 
 Vue.config.productionTip = false
 Vue.use(iView)

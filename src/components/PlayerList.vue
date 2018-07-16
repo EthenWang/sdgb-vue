@@ -31,8 +31,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import Vue from 'vue'
 import { Row, Col } from 'iview'
 import EditPlayer from './EditPlayer'
 

@@ -12,7 +12,6 @@
 
 <script>
 import * as actions from './store/actions'
-import { mapActions } from 'vuex'
 import Layout from './components/Layout'
 
 export default {

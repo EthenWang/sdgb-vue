@@ -3,7 +3,6 @@
 </template>
 
 <script>
-export default {
-  name: 'Game'
+export default class Game extends Vue {
 }
 </script>

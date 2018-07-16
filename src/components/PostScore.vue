@@ -21,10 +21,8 @@
 </template>
 
 <script>
-import * as _ from 'lodash'
 import PostScoreItem from './PostScoreItem'
 import { buildGameScore, isTeamMatch } from '../utils'
-import { mapGetters, mapState } from 'vuex'
 import { POST_GAME_SCORE } from '../store/actions'
 
 export default {

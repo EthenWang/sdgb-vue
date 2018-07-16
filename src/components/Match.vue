@@ -28,7 +28,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Vue from 'vue'
 import { Row, Col } from 'iview'
 
 const TeamPlayer = Vue.extend({

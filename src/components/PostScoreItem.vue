@@ -52,8 +52,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import * as _ from 'lodash'
 import { nickName, isTeamMatch } from '../utils'
 
 export default {
